@@ -28,7 +28,7 @@ describe('framework', function() {
     });
   });
 
-  it("should set up a home page", function(done) {
+  it("should respond with a message", function(done) {
     chai.request(host)
       .get('/')
       .end(function(err, res) {
@@ -39,16 +39,22 @@ describe('framework', function() {
       });
   });
 
-  it("should post", function(done) {
+  it("should save data via POST request", function(done) {
     chai.request(host)
       .post('/')
       .send({Name: "Test"})
       .end(function(err, res) {
         expect(res.status).to.eql(200);
         expect(res.header['content-type']).to.eql('application/json');
-        var fileCount = fs.readdirSync('../data');
+        var fileCount = fs.readdirSync(__dirname + '/../data');
         expect(fileCount.length).to.eql(1);
         done();
       });
+  });
+
+  after(function(done) {
+    fs.unlink(__dirname + '/../data/request0.json', function(err) {
+      done();
+    });
   });
 });
